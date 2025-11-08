@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pixiv Novel Tag Filter
 // @namespace    https://github.com/PRHyzzza/Pixiv-Novel-Tag-Filter
-// @version      1.3
+// @version      1.4
 // @description  过滤Pixiv小说标签页面中的屏蔽标签（完全匹配）
 // @author       PRHyzzza
 // @match        https://www.pixiv.net/tags/*
@@ -339,13 +339,18 @@
     function init() {
         console.log('Pixiv小说标签过滤器已启动');
 
-        // 主要过滤
-        setTimeout(() => {
+        // 主要过滤 - 页面加载完成后执行一次
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                filterNovels();
+                addSettingsPanel();
+            });
+        } else {
             filterNovels();
             addSettingsPanel();
-        }, 2000);
+        }
 
-        // 监听动态内容加载
+        // 保留MutationObserver监听动态内容加载
         const observer = new MutationObserver((mutations) => {
             let shouldFilter = false;
             for (const mutation of mutations) {
@@ -364,7 +369,7 @@
             }
 
             if (shouldFilter) {
-                setTimeout(filterNovels, 500);
+                filterNovels();
             }
         });
 
@@ -372,19 +377,8 @@
             childList: true,
             subtree: true
         });
-
-        // 防抖滚动监听
-        let scrollTimeout;
-        window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(filterNovels, 1000);
-        });
     }
 
     // 启动脚本
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    init();
 })();
