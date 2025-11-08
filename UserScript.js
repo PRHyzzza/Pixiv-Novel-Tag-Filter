@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Pixiv Novel Tag Filter
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/PRHyzzza/Pixiv-Novel-Tag-Filter
 // @version      1.3
 // @description  过滤Pixiv小说标签页面中的屏蔽标签（完全匹配）
 // @author       PRHyzzza
